@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { systemColor } from '@/css/global';
 
@@ -39,9 +39,9 @@ const Default = (props:Props): React.JSX.Element => {
             </TouchableOpacity>
           </View>
 
-          <View>
+          <ScrollView contentContainerStyle={styles.content_container}>
             { props.children }
-          </View>
+          </ScrollView>
         </Pressable>
       </Pressable>
     </Modal>
@@ -67,6 +67,10 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.5)",
     justifyContent: "center",
     alignItems: "center",
+  },
+
+  content_container: {
+    maxHeight: 500,
   },
 
   modal: {

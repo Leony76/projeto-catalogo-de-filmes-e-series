@@ -1,6 +1,7 @@
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
+import Toast from 'react-native-toast-message';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -19,7 +20,26 @@ const RootLayout = (): React.JSX.Element | null => {
 
   SplashScreen.hideAsync();
 
-  return <Stack screenOptions={{ headerShown: false }}/>
+  return (
+    <>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen
+          name="home"
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="home/movies-and-series/[id]"
+          options={{
+            presentation: "transparentModal",
+            animation: "fade",
+            headerShown: false,
+          }}
+        />
+      </Stack>
+      <Toast />
+    </>
+  );
 };
 
 export default RootLayout;

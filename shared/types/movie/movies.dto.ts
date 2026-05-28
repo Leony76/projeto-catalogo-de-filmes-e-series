@@ -1,5 +1,5 @@
 import { Movie } from "./movies.type";
 
-export type MoviesAndSeriesResponse = Pick<Movie, 
-  'poster' | 'genre' | 'title' | 'id' 
->;
+export type MoviesAndSeriesResponse = Movie;
+
+export type MoviesOrSeriesInfosResponse = Movie;

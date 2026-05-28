@@ -83,7 +83,10 @@ const Select = <T extends string>(props:Props<T>): React.JSX.Element => {
               activeOpacity={0.67}
               style={[
                 style.option_button, 
-                selected && { backgroundColor: systemColor.secondary.medium }
+                selected && { 
+                  backgroundColor : systemColor.secondary.medium, 
+                  borderColor     : systemColor.secondary.medium
+                }
               ]}
               >
                 <Text style={[
@@ -115,6 +118,8 @@ const style = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     padding: 5,
+    borderWidth: 1,
+    borderColor: systemColor.primary.light_medium
   },
   
   option_label_text: {

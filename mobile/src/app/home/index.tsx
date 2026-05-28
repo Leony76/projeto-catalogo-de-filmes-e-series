@@ -1,4 +1,4 @@
-import { FlatList, View } from "react-native";
+import { FlatList, View, useWindowDimensions } from "react-native";
 import Layout from "../layout";
 import Input from "@/components/Input";
 import { useEffect, useState } from "react";
@@ -9,32 +9,51 @@ import { style } from "@/css/home";
 import { MOVIES_FILTER, type MoviesFilterOptions } from "@/maps/value_label/filters/movies.filter";
 import { MovieAndSeriesService } from "@/services/movieAndSeries.service";
 import type { MoviesAndSeriesResponse } from "@shared/types/movie/movies.dto";
-import MoviesAndSeries from "@/components/card/MoviesAndSeries";
+import { Card } from "@/components/card";
+import { useMoviesAndSeriesFilter } from "@/hooks/useMoviesAndSeriesFIlter";
 
 const Home = (): React.JSX.Element => {
   const [search, setSearch] = useState<string>('');
   const [filter, setFilter] = useState<MoviesFilterOptions>('none');
 
   const [moviesAndSeries, setMoviesAndSeries] = useState<MoviesAndSeriesResponse[]>([]);
+  const [favoriteMoviesAndSeriesIds, setFavoriteMoviesAndSeriesIds] = useState<string[]>([]);
+
+  const { width } = useWindowDimensions();
+  const numColumns: 1 | 2 | 3 | 4 = 
+    width >= 1250  ? 4 
+    : width >= 950 ? 3 
+    : width >= 650 ? 2
+    :                1 
+  ;
+
+  const { filteredMoviesAndSeries } = useMoviesAndSeriesFilter(
+    moviesAndSeries,
+    favoriteMoviesAndSeriesIds,
+    filter,
+    search,
+  )
 
   useEffect(() => {
     (async() => {
       try {
-        const response = await MovieAndSeriesService.getMovies();
+        const [moviesAndSeries, favoriteMoviesAndSeriesIds] = await Promise.all([
+          MovieAndSeriesService.get(),
+          MovieAndSeriesService.getFavoriteIds(),
+        ]); 
 
-        setMoviesAndSeries(response);
+        setMoviesAndSeries(moviesAndSeries);
+        setFavoriteMoviesAndSeriesIds(favoriteMoviesAndSeriesIds);
       } catch (error:unknown) {
         if (error instanceof Error) {
           console.log(error.message);
         }
       }
     })();
-
-    console.log(process.env.EXPO_PUBLIC_API_URL);
   },[]);
 
   return (
-    <Layout>
+    <Layout mainWrapperStyle={style.main_wrapper}>
       <View style={style.search_and_filter_container}>
         <Input
           value={search}
@@ -56,12 +75,20 @@ const Home = (): React.JSX.Element => {
         />  
       </View>
 
+      <View style={style.separation_row}/>
+      
       <FlatList
-        data={moviesAndSeries}
+        data={filteredMoviesAndSeries}
+        style={numColumns === 1 ? { width: '100%' } : { alignSelf: 'center' }}
+        key={numColumns}
+        numColumns={numColumns}
+        columnWrapperStyle={numColumns > 1 ? { gap: 12 } : undefined}
+        contentContainerStyle={style.movies_and_series_cards_container}
         keyExtractor={(item) => String(item.id)}
         renderItem={({ item }) => (
-          <MoviesAndSeries 
+          <Card.MoviesAndSeries 
             { ...item }
+            numColumns={numColumns}
           />
         )}
       />

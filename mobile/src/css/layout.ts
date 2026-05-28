@@ -8,13 +8,21 @@ export const styles = StyleSheet.create({
 
   header_container: {
     backgroundColor: systemColor.primary.light,
-    padding: 12,
     borderBottomColor: systemColor.secondary.light,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: 5,
     borderStyle: 'dashed',
     borderBottomWidth: 3,
+  },  
+  
+  header_inner_container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    maxWidth: 1300,
+    padding: 10,
+    width: '100%',
   },  
   
   header_title: {
@@ -26,8 +34,10 @@ export const styles = StyleSheet.create({
 
   main_container: {
     flex: 1,
-    paddingHorizontal: 8,
-    paddingVertical: 10,
+    maxWidth: 1300,
+    paddingHorizontal: 12,
+    marginHorizontal: 'auto',
+    width: '100%',
   },
 
   footer_container: {
