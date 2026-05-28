@@ -1,0 +1,26 @@
+{
+  "$schema": "./node_modules/json-server/schema.json",
+  "movies_series": [
+    {
+      "id"      : "1",
+      "title"   : "Breaking Bad",
+      "genre"   : ["Crime", "Drama", "Humor Ácido"],
+      "year"    : "2008",
+      "poster"  : "https://upload.wikimedia.org/wikipedia/pt/e/e1/Breaking_bad_5_temporada_%28parte_1%29_poster.jpg"
+    },
+    {
+      "id"      : "2",
+      "title"   : "Interestelar",
+      "genre"   : ["Ficção científica", "Suspense", "Ação"],
+      "year"    : "2014",
+      "poster"  : "https://upload.wikimedia.org/wikipedia/pt/3/3a/Interstellar_Filme.png"
+    },
+    {
+      "id"      : "3",
+      "title"   : "Stranger Things",
+      "genre"   : ["Terror", "Romance", "Ficção científica"],
+      "year"    : "2016",
+      "poster"  : "https://dnm.nflximg.net/api/v6/mAcAr9TxZIVbINe88xb3Teg5_OA/AAAABTWGrLjDUXHyZZwVT2_kjTXOq8nF8IBgEL5Gp3i97xghSCY3z5nsAKDRMm5qmQ9KNUFFnbWufml7YIz9hVHDoBxpqsrKS_S-VS_5.jpg?r=94b"
+    }
+  ]
+}

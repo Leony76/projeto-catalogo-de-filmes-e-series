@@ -1,0 +1,27 @@
+{
+  "extends": "./node_modules/expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
+    "paths": {
+      "@/*"        : ["src/*"],
+      "@assets/*"  : ["assets/*"],
+      "@shared/*"  : ["../shared/*"],
+      "@backend/*" : ["../backend/src/*"]
+    },
+    "allowUnreachableCode": false,
+    "verbatimModuleSyntax": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "allowUnusedLabels": true
+  },
+
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "ignoreDeprecations": "6.0",
+    "composite": true,
+    "noUnusedLocals": true,
+    "allowUnusedLabels": false,
+    "noFallthroughCasesInSwitch": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "dist",
+    "rootDir": "../",
+  },
+
+  "include": [
+    "src",
+    "../shared"
+  ]
+}
