@@ -7,7 +7,7 @@ class MovieAndSeriesController {
 
     const movieAndSeries = await MovieAndSeriesService.get(router.db);
 
-    res.status(200).jsonp(movieAndSeries);
+    return res.status(200).jsonp(movieAndSeries);
   }
 
 
@@ -25,7 +25,7 @@ class MovieAndSeriesController {
       message: "Filme/Série não encontrado"
     });
 
-    res.status(200).jsonp(movieOrSeries);
+    return res.status(200).jsonp(movieOrSeries);
   }
 
 
@@ -36,7 +36,7 @@ class MovieAndSeriesController {
       router.db, 
     );
 
-    res.status(200).jsonp(favoriteMoviesAndSeriesIds);
+    return res.status(200).jsonp(favoriteMoviesAndSeriesIds);
   }
 
 
@@ -51,13 +51,13 @@ class MovieAndSeriesController {
     );
 
     if (!newFavorite) {
-      res.status(500).jsonp({
+      return res.status(500).jsonp({
         message : 'Ocorreu um erro ao adicionar aos favoritos!',
         success : false,
       });
     }
 
-    res.status(200).jsonp({
+    return res.status(200).jsonp({
       message : 'Adicionado aos favoritos com sucesso!',
       success : true,
     });
@@ -75,15 +75,46 @@ class MovieAndSeriesController {
     );
 
     if (!removedFavorite) {
-      res.status(404).jsonp({
+      return res.status(404).jsonp({
         message : 'Ocorreu um erro ao remover aos favoritos, pois já estava não favoritado!',
         success : false,
       });
     }
 
-    res.status(200).jsonp({
+    return res.status(200).jsonp({
       message : 'Removido dos favoritos com sucesso!',
       success : removedFavorite,
+    });
+  }
+
+
+
+  static async new(req, res) {
+      
+    const data = req.body;
+
+    const newMovieOrSeries = await MovieAndSeriesService.new(
+      router.db, 
+      data,
+    );
+
+    if (newMovieOrSeries === 'FOUND') {
+      return res.status(409).jsonp({
+        message : 'Ocorreu um erro ao adicionar o filme, pois já existe um com o mesmo título!',
+        success : false,
+      });
+    }
+
+    if (!newMovieOrSeries) {
+      return res.status(500).jsonp({
+        message : 'Ocorreu um erro ao remover aos favoritos, tente novamente mais tarde!',
+        success : false,
+      });
+    }
+
+    return res.status(201).jsonp({
+      message : 'Filme/Série adicionada à lista com sucesso!',
+      success : true,
     });
   }
 }

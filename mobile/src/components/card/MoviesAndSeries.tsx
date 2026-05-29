@@ -26,7 +26,7 @@ const MoviesAndSeries = (props:Props): React.JSX.Element => {
       </Text>
 
       <View style={style.genres_container}>
-        {props.genre.map((genre, index) => (
+        {props.genre.slice(0, 3).map((genre, index) => (
           <View 
           key={index}
           style={style.genre_card}
@@ -34,8 +34,14 @@ const MoviesAndSeries = (props:Props): React.JSX.Element => {
             <Text style={style.genre_name}>
               { genre } 
             </Text>
-          </View> 
+          </View>    
         ))}
+
+        { props.genre.length > 3 &&
+          <Text style={{ marginTop: 4, fontFamily: 'Nunito' }}>
+            Mais ...
+          </Text>
+        }
       </View>
 
       <Button
@@ -54,6 +60,7 @@ const MoviesAndSeries = (props:Props): React.JSX.Element => {
 const style = StyleSheet.create({
   card_container: {
     borderWidth: 1,
+    alignSelf: 'flex-start',
     borderRadius: 8,
     gap: 8,
     padding: 8,
@@ -79,6 +86,7 @@ const style = StyleSheet.create({
 
   genres_container: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 8,
   },
 

@@ -9,10 +9,12 @@ type Props = {
   icon?        : React.ElementType;
   placeholder? : string;
   onChange     : (text: string) => void;
-  flex?        : number; 
+  onBlur?      : () => void;
+  error?       : string;
+  flex?        : number;
   onClick: {
     clearText: () => void;
-  }; 
+  };
 };
 
 const Input = (props:Props): React.JSX.Element => {
@@ -20,40 +22,57 @@ const Input = (props:Props): React.JSX.Element => {
   const Icon = props.icon;
 
   return (
-    <View style={[style.text_input_container, { flex: props.flex }]}>
-      { props.label && 
+    <View style={[style.text_input_container, { flex: props.flex }]}> 
+      {props.label && (
         <Text style={style.text_input_label}>
-          { props.label }
+          {props.label}
         </Text>
-      }
+      )}
 
-      <View style={style.text_input_wrapper}>
-        { Icon && 
+      <View
+        style={[
+          style.text_input_wrapper,
+
+          props.error && {
+            borderColor: "red",
+          },
+        ]}
+      >
+        {Icon && (
           <View style={style.text_input_icon_container}>
-            <Icon/> 
+            <Icon />
           </View>
-        }
+        )}
 
-        <TextInput style={style.text_input} 
+        <TextInput
+          style={style.text_input}
           onChangeText={props.onChange}
+          onBlur={props.onBlur}
           placeholderTextColor={systemColor.secondary.medium}
           placeholder={props.placeholder}
           value={props.value}
         />
 
-        { props.value.length > 0 &&
-          <TouchableOpacity style={style.clear_text_input_button_container}
-          activeOpacity={0.67}
-          onPress={() => props.onClick.clearText()}
+        {props.value.length > 0 && (
+          <TouchableOpacity
+            style={style.clear_text_input_button_container}
+            activeOpacity={0.67}
+            onPress={() => props.onClick.clearText()}
           >
-            <AntDesign 
-              name="close" 
-              size={15} 
-              color={systemColor.secondary.medium} 
+            <AntDesign
+              name="close"
+              size={15}
+              color={systemColor.secondary.medium}
             />
           </TouchableOpacity>
-        }
+        )}
       </View>
+
+      {props.error && (
+        <Text style={style.error_text}>
+          {props.error}
+        </Text>
+      )}
     </View>
   )
 };
@@ -61,6 +80,12 @@ const Input = (props:Props): React.JSX.Element => {
 const style = StyleSheet.create({
   text_input_container: {
     gap: 5,
+  },
+
+  error_text: {
+    color: "red",
+    fontSize: 12,
+    fontFamily: 'Nunito',
   },
 
   clear_text_input_button_container: {
@@ -83,6 +108,8 @@ const style = StyleSheet.create({
     minWidth: 0,
     fontFamily: 'Nunito',
     color: systemColor.secondary.dark,
+    padding: 4,
+    paddingHorizontal: 8,
   },
 
   text_input_wrapper: {
@@ -91,7 +118,6 @@ const style = StyleSheet.create({
     borderWidth: 1,
     borderColor: systemColor.secondary.medium,
     borderRadius: 4,
-    paddingVertical: 4,
     backgroundColor: systemColor.primary.translucite,
   },
 });

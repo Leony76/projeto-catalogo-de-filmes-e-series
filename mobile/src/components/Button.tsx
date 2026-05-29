@@ -3,9 +3,10 @@ import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, type StyleProp, type TextStyle, type ViewStyle } from 'react-native'
 
 type Props = {
-  text    : string;
-  onPress : () => void;
-  icon?   : React.ElementType;
+  text      : string;
+  onPress   : () => void;
+  icon?     : React.ElementType;
+  disabled? : boolean;
   customStyle? : {
     container? : StyleProp<ViewStyle>;
     text?      : StyleProp<TextStyle>;
@@ -18,8 +19,13 @@ const Button = (props:Props): React.JSX.Element => {
 
   return (
     <TouchableOpacity
+    disabled={props.disabled}
     activeOpacity={0.67}
-    style={[style.button_container, props.customStyle?.container]}
+    style={[
+      style.button_container, 
+      props.customStyle?.container,
+      props.disabled ? { opacity: 0.5, pointerEvents: 'none' } : undefined
+    ]}
     onPress={props.onPress}
     >
       { Icon && <Icon/> }

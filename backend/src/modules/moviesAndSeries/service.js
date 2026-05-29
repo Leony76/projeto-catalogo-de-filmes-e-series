@@ -31,7 +31,8 @@ class MovieAndSeriesService {
       .find({
         movies_series_id: id
       })
-      .value();
+      .value()
+    ;
 
     if (alreadyExists) {
       return alreadyExists;
@@ -44,7 +45,8 @@ class MovieAndSeriesService {
 
     db.get("favorites")
       .push(newFavorite)
-      .write();
+      .write()
+    ;
 
     return newFavorite;
   }
@@ -56,13 +58,43 @@ class MovieAndSeriesService {
     const exists = db
       .get("favorites")
       .find({ movies_series_id: id })
-      .value();
+      .value()
+    ;
 
     if (!exists) return false;
 
      db.get("favorites")
       .remove({ movies_series_id: id })
-      .write();
+      .write()
+    ;
+
+    return true;
+  }
+
+
+
+  static async new(db, data) {
+
+    const exists = db
+      .get("movies_series")
+      .find({ title: data.title })
+      .value()
+    ;
+
+    if (exists) return 'FOUND';
+
+    const payload = {
+      id     : new Date().toString(),
+      title  : data.title,
+      genre  : data.genres,
+      year   : data.year,
+      poster : data.poster,
+    };
+
+    db.get("movies_series")
+      .push(payload)
+      .write()
+    ;
 
     return true;
   }

@@ -20,6 +20,7 @@ export const styles = StyleSheet.create({
   header_inner_container: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     maxWidth: 1300,
     padding: 10,
     width: '100%',
@@ -57,4 +58,9 @@ export const styles = StyleSheet.create({
     fontFamily: 'Catalunya',
     color: systemColor.secondary.medium,
   },
+
+  system_icon: {
+    flexDirection: 'row',
+    gap: 2,
+  }
 });

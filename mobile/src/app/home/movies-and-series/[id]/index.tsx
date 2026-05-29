@@ -6,9 +6,11 @@ import { MovieAndSeriesService } from '@/services/movieAndSeries.service';
 import type { MoviesAndSeriesResponse as MoviesOrSeriesInfo } from '@shared/types/movie/movies.dto';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react'
-import { Image, Text, TouchableOpacity, View, Modal as ReactNativeModal } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import Toast from 'react-native-toast-message';
+import { showToast } from '@/hooks/showToast';
+import type { ToastState } from '@shared/types/toastState.type';
+import { apiError } from '@/utils/apiError';
 
 const MovieOrSeriesInfo = (): React.JSX.Element => {
 
@@ -16,6 +18,11 @@ const MovieOrSeriesInfo = (): React.JSX.Element => {
 
   const [movieOrSeriesInfos, setMovieOrSeriesInfos] = useState<MoviesOrSeriesInfo | null>(null);
   const [favorited, setFavorited] = useState<boolean>(false);
+  const [toast, setToast] = useState<ToastState>({
+    message : '',
+    type    : 'INFO',
+    visible : false,
+  });
 
   const [expandImage, setExpandImage] = useState<boolean>(false);
 
@@ -24,22 +31,14 @@ const MovieOrSeriesInfo = (): React.JSX.Element => {
       const response = await MovieAndSeriesService.addTofavorites(id);
 
       if (response.success) {
-        Toast.show({
-          type     : 'success',
-          text2    : response.message,
-          position : 'top',
-        });
-
+        showToast(setToast, response.message, 'SUCCESS');
         setFavorited(true);
       }
 
     } catch (error:unknown) {
-      if (error instanceof Error) Toast.show({
-        type     : 'error',
-        text2    : error.message,
-        position : 'top',
-      });
-    }
+      if (error instanceof Error) 
+        showToast(setToast, apiError(error), 'ERROR');
+    } 
   };
 
   const handleRemoveFromFavorites = async(id: string): Promise<void> => {
@@ -47,22 +46,14 @@ const MovieOrSeriesInfo = (): React.JSX.Element => {
       const response = await MovieAndSeriesService.removeFromfavorites(id);
 
       if (response.success) {
-        Toast.show({
-          type     : 'success',
-          text2    : response.message,
-          position : 'top',
-        });
-
+        showToast(setToast, response.message, 'SUCCESS');
         setFavorited(false);
       }
 
     } catch (error:unknown) {
-      if (error instanceof Error) Toast.show({
-        type     : 'error',
-        text2    : error.message,
-        position : 'top',
-      });
-    }
+      if (error instanceof Error) 
+        showToast(setToast, apiError(error), 'ERROR');
+    } 
   };
 
   useEffect(() => {
@@ -82,35 +73,29 @@ const MovieOrSeriesInfo = (): React.JSX.Element => {
         setMovieOrSeriesInfos(infos);
         setFavorited(favoriteIds.includes(infos.id) ? true : false);
       } catch (error:unknown) {
-        if (error instanceof Error) console.error(error.message);
+        if (error instanceof Error) 
+          showToast(setToast, apiError(error), 'ERROR');
       }
     })();
   },[id]);
 
   return (
     <>
-      <ReactNativeModal
-      visible={expandImage}
-      transparent
-      animationType="fade"
-      >
-        <TouchableOpacity
-        activeOpacity={0.67}
-        onPress={() => setExpandImage(false)}
-        style={style.expanded_poster_container}
-        >
-          <Image
-            resizeMode="contain"
-            source={{ uri: movieOrSeriesInfos?.poster }}
-            style={{ width: "100%", height: "100%" }}
-          />
-        </TouchableOpacity>
-      </ReactNativeModal>
+      <Modal.ExpandedImage
+        onClose={() => setExpandImage(false)}
+        uri={movieOrSeriesInfos?.poster ?? ''}
+        visible={expandImage}
+      />
 
       <Modal
       onClose={() => router.back()}
       visible={!expandImage}
       title='DETALHES'
+      toast={toast ? {
+        message : toast.message,
+        type    : toast.type,
+        visible : toast.visible,
+      } : undefined}
       >
         <View style={style.card_container}>
           { movieOrSeriesInfos ? (

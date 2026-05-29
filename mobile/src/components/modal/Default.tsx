@@ -2,12 +2,19 @@ import React from 'react'
 import { Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { systemColor } from '@/css/global';
+import Toast from '../Toast';
+import type { ToastType } from '@shared/types/toastType.type';
 
 type Props = {
   visible  : boolean;
   onClose  : () => void;
   title    : string;
   children : React.ReactNode; 
+  toast?   : {
+    visible : boolean;
+    message : string;
+    type    : ToastType;
+  }
 }
 
 const Default = (props:Props): React.JSX.Element => {
@@ -17,11 +24,21 @@ const Default = (props:Props): React.JSX.Element => {
     transparent
     animationType="fade"
     >
+      { props.toast &&   
+        <Toast
+          visible={props.toast.visible}
+          message={props.toast.message}
+          type={props.toast.type}
+        />
+      }
+
       <Pressable 
       style={styles.overlay}
       onPress={props.onClose}
       >
-        <Pressable style={styles.modal}>
+        <Pressable 
+        style={styles.modal}
+        >
           <View style={styles.title_and_close_modal_button_container}>
             <Text style={styles.title}>
               { props.title}

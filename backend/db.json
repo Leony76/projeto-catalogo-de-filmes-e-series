@@ -1,11 +1,6 @@
 {
   "$schema": "./node_modules/json-server/schema.json",
-  "favorites": [
-    {
-      "id": "1779999346390",
-      "movies_series_id": "3"
-    }
-  ],
+  "favorites": [],
   "movies_series": [
     {
       "id": "1",
@@ -39,6 +34,19 @@
       ],
       "year": "2016",
       "poster": "https://dnm.nflximg.net/api/v6/mAcAr9TxZIVbINe88xb3Teg5_OA/AAAABTWGrLjDUXHyZZwVT2_kjTXOq8nF8IBgEL5Gp3i97xghSCY3z5nsAKDRMm5qmQ9KNUFFnbWufml7YIz9hVHDoBxpqsrKS_S-VS_5.jpg?r=94b"
+    },
+    {
+      "id": "Fri May 29 2026 20:09:51 GMT-0300 (Horário Padrão de Brasília)",
+      "title": "Mad Max - Estrada da Fúria",
+      "genre": [
+        "Ação",
+        "Aventura",
+        "Ficção pós-apocalíptica",
+        "Suspense",
+        "Drama"
+      ],
+      "year": "2015",
+      "poster": "https://m.media-amazon.com/images/M/MV5BZDJkNzQ2ZGMtZmI5YS00NzUxLThmNGEtZmE2OWY0MzE1NGM3XkEyXkFqcGc@._V1_.jpg"
     }
   ]
 }

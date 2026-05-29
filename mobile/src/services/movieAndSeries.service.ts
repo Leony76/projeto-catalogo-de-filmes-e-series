@@ -1,6 +1,7 @@
 import { api } from "./api.service";
 import type { MoviesAndSeriesResponse } from '@shared/types/movie/movies.dto';
 import type { ApiSuccessResponse } from '@shared/types/apiSuccess.type';
+import type { NewMovieOrSeriesSchema } from "@/schemas/newMovieOrSeries";
 
 export class MovieAndSeriesService {
   
@@ -52,6 +53,17 @@ export class MovieAndSeriesService {
     
     const response = await api.delete<ApiSuccessResponse>(
       `/movies-and-series/remove-from-favorite/${id}`
+    );
+
+    return response.data;
+  }
+
+
+
+  public static async addNewMovieOrSeries(data: NewMovieOrSeriesSchema) {
+    
+    const response = await api.post<ApiSuccessResponse>(
+      `/movies-and-series/new`, data
     );
 
     return response.data;
