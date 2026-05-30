@@ -330,7 +330,7 @@ const NewMovieOrSeries = (): React.JSX.Element => {
                         <AntDesign
                           name="close"
                           size={12}
-                          color={systemColor.primary.dark}
+                          color={systemColor.primary.medium}
                         />
                       </TouchableOpacity>
                     </View>

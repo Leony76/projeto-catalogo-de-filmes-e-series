@@ -38,14 +38,14 @@ const MoviesAndSeries = (props:Props): React.JSX.Element => {
         ))}
 
         { props.genre.length > 3 &&
-          <Text style={{ marginTop: 4, fontFamily: 'Nunito' }}>
+          <Text style={{ marginTop: 4, fontFamily: 'Nunito', color: systemColor.secondary.medium }}>
             Mais ...
           </Text>
         }
       </View>
 
       <Button
-        icon={() => <Entypo name="info-with-circle" size={16} color={systemColor.secondary.dark} />}
+        icon={() => <Entypo name="info-with-circle" size={16} color={systemColor.secondary.medium} />}
         onPress={() => router.push(`/home/movies-and-series/${props.id}`)}
         text='Ver mais'
         customStyle={{
@@ -64,7 +64,7 @@ const style = StyleSheet.create({
     borderRadius: 8,
     gap: 8,
     padding: 8,
-    borderColor: systemColor.primary.dark,
+    borderColor: systemColor.primary.medium,
     backgroundColor: systemColor.primary.translucite
   },
 
@@ -76,7 +76,7 @@ const style = StyleSheet.create({
   title: {
     fontFamily: 'Catalunya',
     fontSize: 24,
-    color: systemColor.secondary.dark,
+    color: systemColor.secondary.medium,
   },
 
   poster: {
@@ -100,7 +100,7 @@ const style = StyleSheet.create({
   },
 
   genre_name: {
-    color: systemColor.secondary.dark,
+    color: systemColor.secondary.medium,
     fontFamily: 'Nunito',
     fontWeight: '600',
   },

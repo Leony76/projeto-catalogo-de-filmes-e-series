@@ -61,7 +61,7 @@ export const style = StyleSheet.create({
   },
 
   genre_tag_text: {
-    color: systemColor.primary.dark,
+    color: systemColor.primary.medium,
     fontFamily: "Nunito",
     fontWeight: "600",
   }

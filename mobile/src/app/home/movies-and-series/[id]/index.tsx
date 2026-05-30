@@ -17,6 +17,7 @@ const MovieOrSeriesInfo = (): React.JSX.Element => {
   const { id } = useLocalSearchParams();
 
   const [movieOrSeriesInfos, setMovieOrSeriesInfos] = useState<MoviesOrSeriesInfo | null>(null);
+  const [changed, setChanged] = useState<boolean>(false);
   const [favorited, setFavorited] = useState<boolean>(false);
   const [toast, setToast] = useState<ToastState>({
     message : '',
@@ -33,6 +34,7 @@ const MovieOrSeriesInfo = (): React.JSX.Element => {
       if (response.success) {
         showToast(setToast, response.message, 'SUCCESS');
         setFavorited(true);
+        setChanged(true);
       }
 
     } catch (error:unknown) {
@@ -48,6 +50,7 @@ const MovieOrSeriesInfo = (): React.JSX.Element => {
       if (response.success) {
         showToast(setToast, response.message, 'SUCCESS');
         setFavorited(false);
+        setChanged(true);
       }
 
     } catch (error:unknown) {
@@ -88,7 +91,10 @@ const MovieOrSeriesInfo = (): React.JSX.Element => {
       />
 
       <Modal
-      onClose={() => router.back()}
+      onClose={changed 
+        ? () => router.replace('/home')
+        : () => router.back()
+      }
       visible={!expandImage}
       title='DETALHES'
       toast={toast ? {

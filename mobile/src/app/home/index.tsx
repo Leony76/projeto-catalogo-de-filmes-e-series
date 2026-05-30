@@ -1,4 +1,4 @@
-import { FlatList, View, useWindowDimensions } from "react-native";
+import { FlatList, Text, View, useWindowDimensions } from "react-native";
 import Layout from "../layout";
 import Input from "@/components/Input";
 import { useEffect, useState } from "react";
@@ -17,6 +17,8 @@ import { apiError } from "@/utils/apiError";
 import { showToast } from "@/hooks/showToast";
 import type { ToastState } from "@shared/types/toastState.type";
 import type { ToastType } from "@shared/types/toastType.type";
+import ContentNotFound from "@/components/ContentNotFound";
+import Loading from "@/components/Loading";
 
 const Home = (): React.JSX.Element => {
   const [search, setSearch] = useState<string>('');
@@ -26,6 +28,7 @@ const Home = (): React.JSX.Element => {
   }>();
 
   const [filter, setFilter] = useState<MoviesFilterOptions>('none');
+  const [loading, setLoading] = useState<boolean>(false);
   
   const [toast, setToast] = useState<ToastState>({
     message: '', 
@@ -70,6 +73,8 @@ const Home = (): React.JSX.Element => {
   useEffect(() => {
     (async() => {
       try {
+        setLoading(true);
+
         const [moviesAndSeries, favoriteMoviesAndSeriesIds] = await Promise.all([
           MovieAndSeriesService.get(),
           MovieAndSeriesService.getFavoriteIds(),
@@ -81,19 +86,19 @@ const Home = (): React.JSX.Element => {
         if (error instanceof Error) {
           showToast(setToast, apiError(error), 'ERROR');
         }
+      } finally {
+        setLoading(false);
       }
     })();
   },[]);
 
   return (
     <Layout mainWrapperStyle={style.main_wrapper}>
-      { toast &&
-        <Toast
-          message={toast.message}
-          visible={toast.visible}
-          type={toast.type}
-        />
-      }
+      <Toast
+        message={toast.message}
+        visible={toast.visible}
+        type={toast.type}
+      />
 
       <View style={style.search_and_filter_container}>
         <Input
@@ -118,21 +123,24 @@ const Home = (): React.JSX.Element => {
 
       <View style={style.separation_row}/>
       
-      <FlatList
-        data={filteredMoviesAndSeries}
-        style={numColumns === 1 ? { width: '100%' } : { alignSelf: 'center' }}
-        key={numColumns}
-        numColumns={numColumns}
-        columnWrapperStyle={numColumns > 1 ? { gap: 12 } : undefined}
-        contentContainerStyle={style.movies_and_series_cards_container}
-        keyExtractor={(item) => String(item.id)}
-        renderItem={({ item }) => (
-          <Card.MoviesAndSeries 
-            { ...item }
-            numColumns={numColumns}
-          />
-        )}
-      />
+      { loading ? <Loading/> : (
+        <FlatList
+          data={filteredMoviesAndSeries}
+          style={numColumns === 1 ? { width: '100%' } : { alignSelf: 'center' }}
+          key={numColumns}
+          numColumns={numColumns}
+          columnWrapperStyle={numColumns > 1 ? { gap: 12 } : undefined}
+          contentContainerStyle={style.movies_and_series_cards_container}
+          keyExtractor={(item) => String(item.id)}
+          ListEmptyComponent={<ContentNotFound message="Nenhum filme/série no momento!"/>}
+          renderItem={({ item }) => (
+            <Card.MoviesAndSeries 
+              { ...item }
+              numColumns={numColumns}
+            />
+          )}
+        />
+      )}
     </Layout>
   );
 }

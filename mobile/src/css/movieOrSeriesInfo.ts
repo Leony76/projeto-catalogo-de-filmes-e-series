@@ -7,18 +7,18 @@ export const style = StyleSheet.create({
     borderRadius: 8,
     gap: 8,
     padding: 8,
-    borderColor: systemColor.primary.dark,
+    borderColor: systemColor.primary.medium,
     backgroundColor: systemColor.primary.translucite
   },
 
   text: {
     fontFamily: 'Nunito',
-    color: systemColor.primary.dark,
+    color: systemColor.primary.medium,
     fontWeight: '600'
   },
 
   year: {
-    color: systemColor.secondary.dark,
+    color: systemColor.secondary.medium,
     fontFamily: 'Nunito',
     fontWeight: '600',
   },
@@ -31,7 +31,7 @@ export const style = StyleSheet.create({
   title: {
     fontFamily: 'Catalunya',
     fontSize: 24,
-    color: systemColor.secondary.dark,
+    color: systemColor.secondary.medium,
   },
 
   poster: {
@@ -55,7 +55,7 @@ export const style = StyleSheet.create({
   },
 
   genre_name: {
-    color: systemColor.secondary.dark,
+    color: systemColor.secondary.medium,
     fontFamily: 'Nunito',
     fontWeight: '600',
     paddingRight: 8,

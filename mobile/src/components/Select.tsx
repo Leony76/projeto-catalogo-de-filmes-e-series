@@ -135,7 +135,7 @@ const style = StyleSheet.create({
     fontFamily: 'Nunito',
     fontWeight: '600',
     fontSize: 15,
-    color: systemColor.primary.dark,
+    color: systemColor.primary.medium,
   },
 
   select_placeholder: {
@@ -148,7 +148,7 @@ const style = StyleSheet.create({
   select: {
     flex: 1,
     fontFamily: 'Nunito',
-    color: systemColor.secondary.dark,
+    color: systemColor.secondary.medium,
   },
 
   select_options_container: {

@@ -100,14 +100,14 @@ const style = StyleSheet.create({
     fontFamily: 'Nunito',
     fontWeight: '600',
     fontSize: 15,
-    color: systemColor.primary.dark
+    color: systemColor.primary.medium
   },
 
   text_input: {
     flex: 1,
     minWidth: 0,
     fontFamily: 'Nunito',
-    color: systemColor.secondary.dark,
+    color: systemColor.secondary.medium,
     padding: 4,
     paddingHorizontal: 8,
   },

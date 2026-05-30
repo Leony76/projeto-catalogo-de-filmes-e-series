@@ -53,7 +53,7 @@ const style = StyleSheet.create({
 
   button_text: {
     fontFamily: 'Nunito',
-    color: systemColor.secondary.dark,
+    color: systemColor.secondary.medium,
     fontWeight: '600',
   },
 });

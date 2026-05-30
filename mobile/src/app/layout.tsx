@@ -35,8 +35,8 @@ const Layout = (props:Props): React.JSX.Element => {
             text=''
             icon={() => (
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Entypo name="plus" size={18} color={systemColor.secondary.dark} />
-                <FontAwesome6 name="film" size={18} color={systemColor.secondary.dark} />
+                <Entypo name="plus" size={18} color={systemColor.secondary.medium} />
+                <FontAwesome6 name="film" size={18} color={systemColor.secondary.medium} />
               </View>
             )}
           />

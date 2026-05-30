@@ -84,7 +84,7 @@ class MovieAndSeriesService {
     if (exists) return 'FOUND';
 
     const payload = {
-      id     : new Date().toString(),
+      id     : Date.now().toString(),
       title  : data.title,
       genre  : data.genres,
       year   : data.year,

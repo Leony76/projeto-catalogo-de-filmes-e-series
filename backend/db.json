@@ -1,6 +1,15 @@
 {
   "$schema": "./node_modules/json-server/schema.json",
-  "favorites": [],
+  "favorites": [
+    {
+      "id": "1780099984840",
+      "movies_series_id": "3"
+    },
+    {
+      "id": "1780100003545",
+      "movies_series_id": "1"
+    }
+  ],
   "movies_series": [
     {
       "id": "1",

@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'Catalunya',
     paddingVertical: 5,
-    color: systemColor.primary.dark
+    color: systemColor.primary.medium
   },
 
   button: {
