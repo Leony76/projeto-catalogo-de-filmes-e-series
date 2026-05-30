@@ -1,14 +1,14 @@
 import { api } from "./api.service";
-import type { MoviesAndSeriesResponse } from '@shared/types/movie/movies.dto';
+import type { TitlesResponse } from '@shared/types/title/titles.dto';
 import type { ApiSuccessResponse } from '@shared/types/apiSuccess.type';
-import type { NewMovieOrSeriesSchema } from "@/schemas/newMovieOrSeries";
+import type { NewTitleSchema } from "@/schemas/newTitle";
 
-export class MovieAndSeriesService {
+export class TitleService {
   
   public static async get() {
     
-    const response = await api.get<MoviesAndSeriesResponse[]>(
-      '/movies-and-series'
+    const response = await api.get<TitlesResponse[]>(
+      '/titles'
     );
 
     return response.data;
@@ -18,8 +18,8 @@ export class MovieAndSeriesService {
 
   public static async getInfo(id: string) {
     
-    const response = await api.get<MoviesAndSeriesResponse>(
-      `/movies-and-series/${id}`
+    const response = await api.get<TitlesResponse>(
+      `/titles/${id}`
     );
 
     return response.data;
@@ -30,7 +30,7 @@ export class MovieAndSeriesService {
   public static async getFavoriteIds() {
     
     const response = await api.get<string[]>(
-      `/movies-and-series/favorites`
+      `/titles/favorites`
     );
 
     return response.data;
@@ -41,7 +41,7 @@ export class MovieAndSeriesService {
   public static async addTofavorites(id: string) {
     
     const response = await api.post<ApiSuccessResponse>(
-      `/movies-and-series/add-to-favorite/${id}`
+      `/titles/add-to-favorite/${id}`
     );
 
     return response.data;
@@ -52,7 +52,7 @@ export class MovieAndSeriesService {
   public static async removeFromfavorites(id: string) {
     
     const response = await api.delete<ApiSuccessResponse>(
-      `/movies-and-series/remove-from-favorite/${id}`
+      `/titles/remove-from-favorite/${id}`
     );
 
     return response.data;
@@ -60,10 +60,21 @@ export class MovieAndSeriesService {
 
 
 
-  public static async addNewMovieOrSeries(data: NewMovieOrSeriesSchema) {
+  public static async new(data: NewTitleSchema) {
     
     const response = await api.post<ApiSuccessResponse>(
-      `/movies-and-series/new`, data
+      `/titles/new`, data
+    );
+
+    return response.data;
+  }
+
+
+
+  public static async remove(id: string) {
+    
+    const response = await api.delete<ApiSuccessResponse>(
+      `/titles/remove/${id}`,
     );
 
     return response.data;

@@ -1,15 +1,15 @@
-import type { MoviesFilterOptions } from "@/maps/value_label/filters/movies.filter";
-import { type MoviesAndSeriesResponse } from "@shared/types/movie/movies.dto";
+import type { TitlesFilterOptions } from "@/maps/value_label/filters/title.filter";
+import { type TitlesResponse } from "@shared/types/title/titles.dto";
 import { useMemo } from "react";
 
-export const useMoviesAndSeriesFilter = (
-  moviesAndSeries            : MoviesAndSeriesResponse[],
+export const useTitleFilter = (
+  moviesAndSeries            : TitlesResponse[],
   favoriteMoviesAndSeriesIds : string[],
-  filter                     : MoviesFilterOptions,
+  filter                     : TitlesFilterOptions,
   search                     : string,
-): { filteredMoviesAndSeries : MoviesAndSeriesResponse[] } => {
+): { filteredTitles : TitlesResponse[] } => {
 
-  const filteredMoviesAndSeries = useMemo(() => {
+  const filteredTitles = useMemo(() => {
 
     let movies = [...moviesAndSeries];
 
@@ -58,5 +58,5 @@ export const useMoviesAndSeriesFilter = (
 
   }, [moviesAndSeries, search, filter]);
 
-  return { filteredMoviesAndSeries }
+  return { filteredTitles }
 };

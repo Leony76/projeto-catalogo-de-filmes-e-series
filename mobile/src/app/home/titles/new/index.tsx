@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { showToast } from '@/hooks/showToast';
 import type { ToastState } from '@shared/types/toastState.type';
 import Input from '@/components/Input';
-import { style } from '@/css/newMovieOrSeries';
+import { style } from '@/css/newTitle';
 import { Image, TouchableOpacity, View } from 'react-native';
 import { Text } from 'react-native';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -13,14 +13,14 @@ import Button from '@/components/Button';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {newMovieOrSeriesSchema, type NewMovieOrSeriesSchema } from "@/schemas/newMovieOrSeries";
+import {newTitleSchema, type NewTitleSchema } from "@/schemas/newTitle";
 import * as ImagePicker from "expo-image-picker";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { MovieAndSeriesService } from '@/services/movieAndSeries.service';
+import { TitleService } from '@/services/title.service';
 import { apiError } from '@/utils/apiError';
 
-const NewMovieOrSeries = (): React.JSX.Element => {
+const NewTitle = (): React.JSX.Element => {
 
   const { 
     setValue,
@@ -28,8 +28,8 @@ const NewMovieOrSeries = (): React.JSX.Element => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<NewMovieOrSeriesSchema>({
-    resolver: zodResolver(newMovieOrSeriesSchema),
+  } = useForm<NewTitleSchema>({
+    resolver: zodResolver(newTitleSchema),
      defaultValues: {  
       poster : "",
       title  : "",
@@ -40,6 +40,7 @@ const NewMovieOrSeries = (): React.JSX.Element => {
 
   const [genreInput, setGenreInput] = useState<string>('');
   const [expandedPoster, setExpandedPoster] = useState<boolean>(false);
+  const [processing, setProcessing] = useState<boolean>(false);
   const [toast, setToast] = useState<ToastState>({
     message : '',
     type    : 'INFO',
@@ -51,9 +52,11 @@ const NewMovieOrSeries = (): React.JSX.Element => {
 
   const isBase64Image = poster.startsWith("data:image");
 
-  const handleNewMovieOrSeries = async(data: NewMovieOrSeriesSchema): Promise<void> => {
+  const handleNewTitle = async(data: NewTitleSchema): Promise<void> => {
     try { 
-      const response = await MovieAndSeriesService.addNewMovieOrSeries(data);
+      setProcessing(true);
+
+      const response = await TitleService.new(data);
 
       if (response.success) {
         router.replace({
@@ -65,9 +68,10 @@ const NewMovieOrSeries = (): React.JSX.Element => {
         });
       }
     } catch (error:unknown) {
-      if (error instanceof Error) 
-        showToast(setToast, apiError(error), 'ERROR');
-    } 
+      showToast(setToast, apiError(error), 'ERROR');
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const handlePickImage = async (): Promise<void> => {
@@ -93,7 +97,9 @@ const NewMovieOrSeries = (): React.JSX.Element => {
       return;
     }
 
-    const base64 = `data:image/jpeg;base64,${asset.base64}`;
+    const mimeType = asset.mimeType ?? 'image/jpeg';
+
+    const base64 = `data:${mimeType};base64,${asset.base64}`;
 
     setValue(
       "poster",
@@ -341,9 +347,10 @@ const NewMovieOrSeries = (): React.JSX.Element => {
           />
 
           <Button
-            text='Adicionar'
+            text={processing ? 'Adicionando' : 'Adicionar'}
             disabled={Object.keys(errors).length > 0}
-            onPress={handleSubmit(handleNewMovieOrSeries)}
+            onPress={handleSubmit(handleNewTitle)}
+            loading={processing}
             customStyle={{ 
               text : { color: systemColor.secondary.medium, paddingVertical: 6 }, 
             }}
@@ -369,4 +376,4 @@ const NewMovieOrSeries = (): React.JSX.Element => {
   )
 }
 
-export default NewMovieOrSeries;
+export default NewTitle;

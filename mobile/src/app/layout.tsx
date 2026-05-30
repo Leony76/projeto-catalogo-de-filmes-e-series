@@ -31,7 +31,7 @@ const Layout = (props:Props): React.JSX.Element => {
           </View>
 
           <Button
-            onPress={() => router.push('/home/movies-and-series/new')}
+            onPress={() => router.push('/home/titles/new')}
             text=''
             icon={() => (
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>

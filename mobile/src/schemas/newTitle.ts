@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const newMovieOrSeriesSchema = z.object({
+export const newTitleSchema = z.object({
   poster: z.string().refine(
     value => value.startsWith("data:image") 
     ||
@@ -36,4 +36,4 @@ export const newMovieOrSeriesSchema = z.object({
     .min(1, "Insira pelo menos um gênero"),
 });
 
-export type NewMovieOrSeriesSchema = z.infer<typeof newMovieOrSeriesSchema>;
+export type NewTitleSchema = z.infer<typeof newTitleSchema>;

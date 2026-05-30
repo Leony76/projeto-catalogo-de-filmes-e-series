@@ -28,7 +28,7 @@ const RootLayout = (): React.JSX.Element | null => {
         />
 
         <Stack.Screen
-          name="home/movies-and-series/[id]"
+          name="home/titles/[id]"
           options={{
             presentation : "transparentModal",
             animation    : "fade",
@@ -37,7 +37,7 @@ const RootLayout = (): React.JSX.Element | null => {
         />
 
         <Stack.Screen
-          name="home/movies-and-series/new"
+          name="home/titles/new"
           options={{
             presentation : "transparentModal",
             animation    : "fade",

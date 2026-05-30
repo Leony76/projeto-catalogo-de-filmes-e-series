@@ -1,12 +1,13 @@
 import { systemColor } from '@/css/global';
 import React from 'react'
-import { StyleSheet, Text, TouchableOpacity, type StyleProp, type TextStyle, type ViewStyle } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, type StyleProp, type TextStyle, type ViewStyle } from 'react-native'
 
 type Props = {
-  text      : string;
+  text?     : string;
   onPress   : () => void;
   icon?     : React.ElementType;
   disabled? : boolean;
+  loading?  : boolean;
   customStyle? : {
     container? : StyleProp<ViewStyle>;
     text?      : StyleProp<TextStyle>;
@@ -28,8 +29,12 @@ const Button = (props:Props): React.JSX.Element => {
     ]}
     onPress={props.onPress}
     >
-      { Icon && <Icon/> }
-
+      { props.loading ? (
+       <ActivityIndicator/> 
+      ) : (
+        Icon && <Icon/> 
+      )}
+      
       <Text style={[style.button_text, props.customStyle?.text]}>
         { props.text }
       </Text>

@@ -1,5 +1,5 @@
-import MoviesAndSeries from "./MoviesAndSeries";
+import Title from "./Title";
 
 export const Card = {
-  MoviesAndSeries,
+  Title,
 };

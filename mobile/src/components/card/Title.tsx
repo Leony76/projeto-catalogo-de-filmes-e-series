@@ -1,6 +1,6 @@
 import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
-import type { MoviesAndSeriesResponse as MoviesAndSeriesType } from "@shared/types/movie/movies.dto";
+import type { TitlesResponse as MoviesAndSeriesType } from "@shared/types/title/titles.dto";
 import { systemColor } from '@/css/global';
 import Button from '../Button';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -10,7 +10,7 @@ type Props = MoviesAndSeriesType & {
   numColumns: number;
 };
 
-const MoviesAndSeries = (props:Props): React.JSX.Element => {
+const Title = (props:Props): React.JSX.Element => {
   
   return (
     <View style={[style.card_container, { width: props.numColumns === 1 ? '100%': 300 } ]}>
@@ -46,7 +46,7 @@ const MoviesAndSeries = (props:Props): React.JSX.Element => {
 
       <Button
         icon={() => <Entypo name="info-with-circle" size={16} color={systemColor.secondary.medium} />}
-        onPress={() => router.push(`/home/movies-and-series/${props.id}`)}
+        onPress={() => router.push(`/home/titles/${props.id}`)}
         text='Ver mais'
         customStyle={{
           container : { paddingVertical: 8 },
@@ -106,4 +106,4 @@ const style = StyleSheet.create({
   },
 });
 
-export default MoviesAndSeries
+export default Title

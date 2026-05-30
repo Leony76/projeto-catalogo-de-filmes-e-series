@@ -1,7 +1,7 @@
 const { router } = require("../../../server");
-const { MovieAndSeriesService } = require("./service");
+const { TitleService } = require("./service");
 
-class MovieAndSeriesController {
+class TitleController {
 
   static genericResponseError = 'Erro interno no servidor!';
 
@@ -14,9 +14,11 @@ class MovieAndSeriesController {
     });
   }
 
+
+
   static async get(req, res) {
     try {
-      const movieAndSeries = await MovieAndSeriesService.get(router.db);
+      const movieAndSeries = await TitleService.get(router.db);
   
       return res.status(200).jsonp(movieAndSeries);
     } catch (error) {
@@ -30,16 +32,16 @@ class MovieAndSeriesController {
     try {
       const { id } = req.params;
   
-      const movieOrSeries = await MovieAndSeriesService.getInfoById(
+      const title = await TitleService.getInfoById(
         router.db, 
         String(id)
       );
   
-      if (!movieOrSeries) return res.status(404).jsonp({
+      if (!title) return res.status(404).jsonp({
         message: "Filme/Série não encontrado"
       });
   
-      return res.status(200).jsonp(movieOrSeries);
+      return res.status(200).jsonp(title);
     } catch (error) {
       return this.handleInternalError(res, error);
     }
@@ -49,11 +51,11 @@ class MovieAndSeriesController {
 
   static async getFavoriteId(req, res) {
     try {
-      const favoriteMoviesAndSeriesIds = await MovieAndSeriesService.getFavoritesIds(
+      const favoriteTitlesIds = await TitleService.getFavoritesIds(
         router.db, 
       );
   
-      return res.status(200).jsonp(favoriteMoviesAndSeriesIds);
+      return res.status(200).jsonp(favoriteTitlesIds);
     } catch (error) {
       return this.handleInternalError(res, error);
     }
@@ -65,14 +67,21 @@ class MovieAndSeriesController {
     try {
       const { id } = req.params;
   
-      const newFavorite = await MovieAndSeriesService.addToFavorites(
+      const newFavorite = await TitleService.addToFavorites(
         router.db, 
         String(id),
       );
   
+      if (newFavorite === 'ALREADY_ADDED') {
+        return res.status(409).jsonp({
+          message : 'Ocorreu um erro ao adicionar aos favoritos, pois já estava!',
+          success : false,
+        });
+      }
+      
       if (!newFavorite) {
-        return res.status(500).jsonp({
-          message : 'Ocorreu um erro ao adicionar aos favoritos!',
+        return res.status(404).jsonp({
+          message : 'Ocorreu um erro ao adicionar aos favoritos, pois o título não existe!',
           success : false,
         });
       }
@@ -92,18 +101,25 @@ class MovieAndSeriesController {
     try {  
       const { id } = req.params;
   
-      const removedFavorite = await MovieAndSeriesService.removeFromFavorites(
+      const removedFavorite = await TitleService.removeFromFavorites(
         router.db, 
         String(id),
       );
   
-      if (!removedFavorite) {
-        return res.status(404).jsonp({
+      if (removedFavorite === 'ALREADY_UNFAVORITED') {
+        return res.status(409).jsonp({
           message : 'Ocorreu um erro ao remover aos favoritos, pois já estava não favoritado!',
           success : false,
         });
       }
-  
+
+      if (!removedFavorite) {
+        return res.status(404).jsonp({
+          message : 'Ocorreu um erro ao remover dos favoritos, pois o título não existe!',
+          success : false,
+        });
+      }
+
       return res.status(200).jsonp({
         message : 'Removido dos favoritos com sucesso!',
         success : removedFavorite,
@@ -119,12 +135,19 @@ class MovieAndSeriesController {
     try {
       const data = req.body;
   
-      const newMovieOrSeries = await MovieAndSeriesService.new(
+      const newMovieOrSeries = await TitleService.new(
         router.db, 
         data,
       );
+
+      if (newMovieOrSeries === 'INVALID_POSTER_FORMAT') {
+        return res.status(400).jsonp({
+          message : 'O poster deve ser uma imagem estática!',
+          success : false,
+        });
+      }
   
-      if (newMovieOrSeries === 'FOUND') {
+      if (newMovieOrSeries === 'ALREADY_EXIST') {
         return res.status(409).jsonp({
           message : 'Ocorreu um erro ao adicionar o filme, pois já existe um com o mesmo título!',
           success : false,
@@ -133,7 +156,7 @@ class MovieAndSeriesController {
   
       if (!newMovieOrSeries) {
         return res.status(500).jsonp({
-          message : 'Ocorreu um erro ao remover aos favoritos, tente novamente mais tarde!',
+          message : 'Ocorreu um erro ao adicionar o filme, tente novamente mais tarde!',
           success : false,
         });
       }
@@ -146,6 +169,40 @@ class MovieAndSeriesController {
       return this.handleInternalError(res, error);
     }
   }
+
+
+
+  static async remove(req, res) {
+    try {
+      const { id } = req.params;
+  
+      const remove = await TitleService.remove(
+        router.db, 
+        id,
+      );
+  
+      if (remove === 'NOT_FOUND') {
+        return res.status(404).jsonp({
+          message : 'Ocorreu um erro ao remover o filme, pois ele não existe!',
+          success : false,
+        });
+      }
+  
+      if (!remove) {
+        return res.status(404).jsonp({
+          message : 'Ocorreu um erro ao remover o filme, pois ele não existe!',
+          success : false,
+        });
+      }
+  
+      return res.status(200).jsonp({
+        message : 'Filme/Série removido da lista com sucesso!',
+        success : true,
+      });
+    } catch (error) {
+      return this.handleInternalError(res, error);
+    }
+  }
 }
 
-module.exports = { MovieAndSeriesController };
+module.exports = { TitleController };

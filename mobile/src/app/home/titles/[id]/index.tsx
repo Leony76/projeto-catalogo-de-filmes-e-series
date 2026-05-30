@@ -1,9 +1,9 @@
 import Button from '@/components/Button';
 import ContentNotFound from '@/components/ContentNotFound';
 import { Modal } from '@/components/modal';
-import { style } from '@/css/movieOrSeriesInfo';
-import { MovieAndSeriesService } from '@/services/movieAndSeries.service';
-import type { MoviesAndSeriesResponse as MoviesOrSeriesInfo } from '@shared/types/movie/movies.dto';
+import { style } from '@/css/titleInfo';
+import { TitleService } from '@/services/title.service';
+import type { TitlesResponse as MoviesOrSeriesInfo } from '@shared/types/title/titles.dto';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react'
 import { Image, Text, TouchableOpacity, View } from 'react-native';
@@ -11,25 +11,50 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { showToast } from '@/hooks/showToast';
 import type { ToastState } from '@shared/types/toastState.type';
 import { apiError } from '@/utils/apiError';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 const MovieOrSeriesInfo = (): React.JSX.Element => {
 
   const { id } = useLocalSearchParams();
 
   const [movieOrSeriesInfos, setMovieOrSeriesInfos] = useState<MoviesOrSeriesInfo | null>(null);
+  const [processing, setProcessing] = useState<boolean>(false);
   const [changed, setChanged] = useState<boolean>(false);
   const [favorited, setFavorited] = useState<boolean>(false);
+  const [modal, setModal] = useState<'EXPAND_POSTER' | 'REMOVE_TITLE_CONFIRM' | null>(null);
   const [toast, setToast] = useState<ToastState>({
     message : '',
     type    : 'INFO',
     visible : false,
   });
 
-  const [expandImage, setExpandImage] = useState<boolean>(false);
+  const handleRemoveTitle = async(id:string): Promise<void> => {
+    try {
+      setProcessing(true);
+
+      const response = await TitleService.remove(id);
+
+      if (response.success) {
+        router.replace({
+          pathname : '/home',
+          params   : {
+            message : response.message,
+            type    : 'SUCCESS',
+          }
+        });
+      }
+    } catch (error:unknown) {
+      showToast(setToast, apiError(error), 'ERROR');
+    } finally {
+      setProcessing(false);
+    }
+  };
 
   const handleAddToFavorites = async(id: string): Promise<void> => {
     try {
-      const response = await MovieAndSeriesService.addTofavorites(id);
+      setProcessing(true);
+
+      const response = await TitleService.addTofavorites(id);
 
       if (response.success) {
         showToast(setToast, response.message, 'SUCCESS');
@@ -38,14 +63,17 @@ const MovieOrSeriesInfo = (): React.JSX.Element => {
       }
 
     } catch (error:unknown) {
-      if (error instanceof Error) 
-        showToast(setToast, apiError(error), 'ERROR');
-    } 
+      showToast(setToast, apiError(error), 'ERROR');
+    } finally {
+      setProcessing(false);
+    }
   };
 
   const handleRemoveFromFavorites = async(id: string): Promise<void> => {
     try {
-      const response = await MovieAndSeriesService.removeFromfavorites(id);
+      setProcessing(true);
+
+      const response = await TitleService.removeFromfavorites(id);
 
       if (response.success) {
         showToast(setToast, response.message, 'SUCCESS');
@@ -54,9 +82,10 @@ const MovieOrSeriesInfo = (): React.JSX.Element => {
       }
 
     } catch (error:unknown) {
-      if (error instanceof Error) 
-        showToast(setToast, apiError(error), 'ERROR');
-    } 
+      showToast(setToast, apiError(error), 'ERROR');
+    } finally {
+      setProcessing(false);
+    }
   };
 
   useEffect(() => {
@@ -69,15 +98,14 @@ const MovieOrSeriesInfo = (): React.JSX.Element => {
     (async() => {
       try {
         const [infos, favoriteIds] = await Promise.all([
-          MovieAndSeriesService.getInfo(String(id)),
-          MovieAndSeriesService.getFavoriteIds(),
+          TitleService.getInfo(String(id)),
+          TitleService.getFavoriteIds(),
         ]); 
 
         setMovieOrSeriesInfos(infos);
         setFavorited(favoriteIds.includes(infos.id) ? true : false);
       } catch (error:unknown) {
-        if (error instanceof Error) 
-          showToast(setToast, apiError(error), 'ERROR');
+        showToast(setToast, apiError(error), 'ERROR');
       }
     })();
   },[id]);
@@ -85,18 +113,27 @@ const MovieOrSeriesInfo = (): React.JSX.Element => {
   return (
     <>
       <Modal.ExpandedImage
-        onClose={() => setExpandImage(false)}
+        onClose={() => setModal(null)}
         uri={movieOrSeriesInfos?.poster ?? ''}
-        visible={expandImage}
+        visible={modal === 'EXPAND_POSTER'}
+      />
+
+      <Modal.ConfirmAction
+        title='Confirmar ação'
+        message='Tem certeza em remover esse título?'
+        processing={processing}
+        onClose={() => setModal(null)}
+        onAccept={() => handleRemoveTitle(String(id))}
+        visible={modal === 'REMOVE_TITLE_CONFIRM'}
       />
 
       <Modal
+      title='DETALHES'
       onClose={changed 
         ? () => router.replace('/home')
         : () => router.back()
       }
-      visible={!expandImage}
-      title='DETALHES'
+      visible={!modal}
       toast={toast ? {
         message : toast.message,
         type    : toast.type,
@@ -109,7 +146,7 @@ const MovieOrSeriesInfo = (): React.JSX.Element => {
               <TouchableOpacity 
               style={style.poster_container}
               activeOpacity={0.67}
-              onPress={() => setExpandImage(true)}
+              onPress={() => setModal('EXPAND_POSTER')}
               >
                 <Image
                   style={style.poster}
@@ -150,20 +187,38 @@ const MovieOrSeriesInfo = (): React.JSX.Element => {
                     { movieOrSeriesInfos.year } 
                   </Text>
                 </View>
+                
+                <View style={{ flexDirection: 'row', gap: 8 }}>
+                  <Button
+                    text={
+                      !processing 
+                        ? favorited 
+                          ? 'Favorito' 
+                          :'Favoritar' 
+                        : ''
+                    }
+                    loading={processing}
+                    icon={() => <AntDesign name="star" size={18} color={favorited ? "yellow" : "darkgoldenrod"} />}
+                    onPress={
+                      favorited 
+                        ? () => handleRemoveFromFavorites(String(id))
+                        : () => handleAddToFavorites(String(id))
+                    }
+                    customStyle={{
+                      text      : { color: favorited ? 'yellow' : 'darkgoldenrod' },
+                      container : { borderColor: favorited ? '#fff42b25' : 'darkgoldenrod', backgroundColor: favorited ? 'darkgoldenrod' : '#fff42b25' }
+                    }}
+                    />
 
-                <Button
-                  icon={() => <AntDesign name="star" size={18} color={favorited ? "yellow" : "darkgoldenrod"} />}
-                  onPress={
-                    favorited 
-                      ? () => handleRemoveFromFavorites(String(id))
-                      : () => handleAddToFavorites(String(id))
-                  }
-                  customStyle={{
-                    text      : { color: favorited ? 'yellow' : 'darkgoldenrod' },
-                    container : { borderColor: favorited ? '#fff42b25' : 'darkgoldenrod', backgroundColor: favorited ? 'darkgoldenrod' : '#fff42b25' }
-                  }}
-                  text={favorited ? 'Favorito' :'Favoritar'}
-                />
+                  <Button
+                    icon={() => <FontAwesome style={{  marginRight: -6 }} name="trash" size={24} color="red" />}
+                    onPress={() => setModal('REMOVE_TITLE_CONFIRM')}
+                    customStyle={{
+                      text      : { color: 'red' },
+                      container : { borderColor: 'red', paddingHorizontal: 12, backgroundColor: '#ffebeb' }
+                    }}
+                  />
+                </View>
               </View>
             </>
           ) : <ContentNotFound message='Não foi possível trazer as informações do(a) filme/série'/>} 

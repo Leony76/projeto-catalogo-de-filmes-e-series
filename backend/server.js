@@ -11,7 +11,7 @@ module.exports = {
   router,
 };
 
-require("./src/modules/moviesAndSeries/route.js");
+require("./src/modules/title/route.js");
 
 server.use(router);
 

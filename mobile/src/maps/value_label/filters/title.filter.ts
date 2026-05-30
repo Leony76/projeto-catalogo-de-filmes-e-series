@@ -1,4 +1,4 @@
-export const MOVIES_FILTER = [
+export const TITLES_FILTER = [
   { value: 'none'        , label: 'Nenhum'                     },
   { value: 'favorites'   , label: 'Favoritos'                  },
   { value: 'AZTitle'     , label: 'Título [A-Z]'               },
@@ -9,4 +9,4 @@ export const MOVIES_FILTER = [
   { value: 'leastRecent' , label: 'Menos recente (lançamento)' },
 ] as const;
 
-export type MoviesFilterOptions = typeof MOVIES_FILTER[number]['value'];
+export type TitlesFilterOptions = typeof TITLES_FILTER[number]['value'];

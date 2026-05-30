@@ -1,4 +1,4 @@
-import { FlatList, Text, View, useWindowDimensions } from "react-native";
+import { FlatList, View, useWindowDimensions } from "react-native";
 import Layout from "../layout";
 import Input from "@/components/Input";
 import { useEffect, useState } from "react";
@@ -6,11 +6,11 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { systemColor } from "@/css/global";
 import Select from "@/components/Select";
 import { style } from "@/css/home";
-import { MOVIES_FILTER, type MoviesFilterOptions } from "@/maps/value_label/filters/movies.filter";
-import { MovieAndSeriesService } from "@/services/movieAndSeries.service";
-import type { MoviesAndSeriesResponse } from "@shared/types/movie/movies.dto";
+import { TITLES_FILTER, type TitlesFilterOptions } from "@/maps/value_label/filters/title.filter";
+import { TitleService } from "@/services/title.service";
+import type { TitlesResponse } from "@shared/types/title/titles.dto";
 import { Card } from "@/components/card";
-import { useMoviesAndSeriesFilter } from "@/hooks/useMoviesAndSeriesFIlter";
+import { useTitleFilter } from "@/hooks/useTitleFilter";
 import { router, useLocalSearchParams } from "expo-router";
 import Toast from "@/components/Toast";
 import { apiError } from "@/utils/apiError";
@@ -27,7 +27,7 @@ const Home = (): React.JSX.Element => {
     type?    : 'SUCCESS' | 'ERROR' | 'INFO';
   }>();
 
-  const [filter, setFilter] = useState<MoviesFilterOptions>('none');
+  const [filter, setFilter] = useState<TitlesFilterOptions>('none');
   const [loading, setLoading] = useState<boolean>(false);
   
   const [toast, setToast] = useState<ToastState>({
@@ -37,8 +37,8 @@ const Home = (): React.JSX.Element => {
   });
 
 
-  const [moviesAndSeries, setMoviesAndSeries] = useState<MoviesAndSeriesResponse[]>([]);
-  const [favoriteMoviesAndSeriesIds, setFavoriteMoviesAndSeriesIds] = useState<string[]>([]);
+  const [titles, setTitles] = useState<TitlesResponse[]>([]);
+  const [favoriteTitlesIds, setFavoriteTitlesIds] = useState<string[]>([]);
 
   const { width } = useWindowDimensions();
   const numColumns: 1 | 2 | 3 | 4 = 
@@ -48,9 +48,9 @@ const Home = (): React.JSX.Element => {
     :                1 
   ;
 
-  const { filteredMoviesAndSeries } = useMoviesAndSeriesFilter(
-    moviesAndSeries,
-    favoriteMoviesAndSeriesIds,
+  const { filteredTitles } = useTitleFilter(
+    titles,
+    favoriteTitlesIds,
     filter,
     search,
   );
@@ -75,17 +75,15 @@ const Home = (): React.JSX.Element => {
       try {
         setLoading(true);
 
-        const [moviesAndSeries, favoriteMoviesAndSeriesIds] = await Promise.all([
-          MovieAndSeriesService.get(),
-          MovieAndSeriesService.getFavoriteIds(),
+        const [titles, favoriteTitlesIds] = await Promise.all([
+          TitleService.get(),
+          TitleService.getFavoriteIds(),
         ]); 
 
-        setMoviesAndSeries(moviesAndSeries);
-        setFavoriteMoviesAndSeriesIds(favoriteMoviesAndSeriesIds);
+        setTitles(titles);
+        setFavoriteTitlesIds(favoriteTitlesIds);
       } catch (error:unknown) {
-        if (error instanceof Error) {
-          showToast(setToast, apiError(error), 'ERROR');
-        }
+        showToast(setToast, apiError(error), 'ERROR');
       } finally {
         setLoading(false);
       }
@@ -116,7 +114,7 @@ const Home = (): React.JSX.Element => {
           value={filter}
           icon={() => <FontAwesome5 name="filter" size={12} color={systemColor.secondary.medium} />}
           placeholder="Filtro"
-          optionsSchema={MOVIES_FILTER}
+          optionsSchema={TITLES_FILTER}
           onClick={(option) => setFilter(option)}
         />  
       </View>
@@ -125,7 +123,7 @@ const Home = (): React.JSX.Element => {
       
       { loading ? <Loading/> : (
         <FlatList
-          data={filteredMoviesAndSeries}
+          data={filteredTitles}
           style={numColumns === 1 ? { width: '100%' } : { alignSelf: 'center' }}
           key={numColumns}
           numColumns={numColumns}
@@ -134,7 +132,7 @@ const Home = (): React.JSX.Element => {
           keyExtractor={(item) => String(item.id)}
           ListEmptyComponent={<ContentNotFound message="Nenhum filme/série no momento!"/>}
           renderItem={({ item }) => (
-            <Card.MoviesAndSeries 
+            <Card.Title 
               { ...item }
               numColumns={numColumns}
             />

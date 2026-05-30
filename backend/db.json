@@ -1,16 +1,7 @@
 {
   "$schema": "./node_modules/json-server/schema.json",
-  "favorites": [
-    {
-      "id": "1780099984840",
-      "movies_series_id": "3"
-    },
-    {
-      "id": "1780100003545",
-      "movies_series_id": "1"
-    }
-  ],
-  "movies_series": [
+  "favorites": [],
+  "titles": [
     {
       "id": "1",
       "title": "Breaking Bad",
@@ -34,28 +25,26 @@
       "poster": "https://upload.wikimedia.org/wikipedia/pt/3/3a/Interstellar_Filme.png"
     },
     {
-      "id": "3",
-      "title": "Stranger Things ",
+      "id": "1780145577725",
+      "title": "Stranger Things",
       "genre": [
         "Terror",
-        "Romance",
-        "Ficção científica"
+        "Suspense",
+        "Sobrenatural"
       ],
       "year": "2016",
       "poster": "https://dnm.nflximg.net/api/v6/mAcAr9TxZIVbINe88xb3Teg5_OA/AAAABTWGrLjDUXHyZZwVT2_kjTXOq8nF8IBgEL5Gp3i97xghSCY3z5nsAKDRMm5qmQ9KNUFFnbWufml7YIz9hVHDoBxpqsrKS_S-VS_5.jpg?r=94b"
     },
     {
-      "id": "Fri May 29 2026 20:09:51 GMT-0300 (Horário Padrão de Brasília)",
+      "id": "1780145854062",
       "title": "Mad Max - Estrada da Fúria",
       "genre": [
-        "Ação",
-        "Aventura",
         "Ficção pós-apocalíptica",
-        "Suspense",
-        "Drama"
+        "Ação",
+        "Suspense"
       ],
       "year": "2015",
-      "poster": "https://m.media-amazon.com/images/M/MV5BZDJkNzQ2ZGMtZmI5YS00NzUxLThmNGEtZmE2OWY0MzE1NGM3XkEyXkFqcGc@._V1_.jpg"
+      "poster": "https://ingresso-a.akamaihd.net/img/cinema/cartaz/9152-cartaz.jpg"
     }
   ]
 }
