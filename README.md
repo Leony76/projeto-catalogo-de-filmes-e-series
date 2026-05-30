@@ -121,6 +121,6 @@ Após iniciar o Expo:
 * Pressione `w` para Web
 * Escaneie o QR Code com o aplicativo Expo Go
 
-## Autor
+## Propósito
 
 Projeto acadêmico desenvolvido para a AVP 2 da disciplina de Desenvolvimento para Dispositivos Móveis.
